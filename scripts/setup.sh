@@ -39,6 +39,8 @@ cd js_cucumber
 npm install --silent
 if $js
 then
+    nvm install 12
+    nvm use 12
     npm install $TRAVIS_BUILD_DIR --silent
 fi
 
