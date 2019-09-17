@@ -577,3 +577,7 @@ def create_keyreg_txn(context):
 def step_impl(context, cnt):
     txns = context.acl.transactions_by_address(context.accounts[0], limit=int(cnt))
     assert (txns == {} or "transactions" in txns)
+
+@given('default asset creation transaction with total issuance {amt}')
+def step_impl(context, amt):
+    context.txn = transaction.AssetCreateTxn(context.pk, context.fee, context.fv, context.lv, context.gh, context.amt, False)
