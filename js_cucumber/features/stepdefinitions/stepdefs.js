@@ -312,6 +312,25 @@ Given("default multisig transaction with parameters {int} {string}", async funct
     return this.txn
 });
 
+Given('default asset creation transaction with total issuance {int}', async function (issuance) {
+    this.pk = this.accounts[0]
+    result = await this.acl.getTransactionParams()
+    this.lastRound = result.lastRound
+
+    this.txn = {
+        "fee": this.fee,
+        "firstRound": result["lastRound"] + 1,
+        "lastRound": result["lastRound"] + 1000,
+        "genesisHash": result["genesishashb64"],
+        "genesisID": result["genesisID"],
+        "type": "acfg",
+        "assetTotal": issuance,
+        "assetDefaultFrozen": false
+    };
+
+    return this.txn
+});
+
 When("I import the multisig", async function(){
 
     addrs = [];
