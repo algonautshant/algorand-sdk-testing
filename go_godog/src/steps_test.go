@@ -144,6 +144,7 @@ func FeatureContext(s *godog.Suite) {
 	s.Step("wallet information", walletInfo)
 	s.Step(`default transaction with parameters (\d+) "([^"]*)"`, defaultTxn)
 	s.Step(`default multisig transaction with parameters (\d+) "([^"]*)"`, defaultMsigTxn)
+	s.Step(`^default asset creation transaction with total issuance (\d+)$`, defaultAssetCreationTransactionWithTotalIssuance)
 	s.Step("I get the private key", getSk)
 	s.Step("I send the transaction", sendTxn)
 	s.Step("I send the multisig transaction", sendMsigTxn)
@@ -739,6 +740,21 @@ func defaultMsigTxn(iamt int, inote string) error {
 		return err
 	}
 	return nil
+}
+
+func defaultAssetCreationTransactionWithTotalIssuance(issuance int) error {
+	var err error
+
+	assetIssuance := uint64(issuance)
+	pk = accounts[0]
+	params, err := acl.SuggestedParams()
+	if err != nil {
+		return err
+	}
+	lastRound = params.LastRound
+	txn, err = transaction.MakeAssetCreateTxn(pk, params.Fee, params.LastRound, params.LastRound+1000, nil, params.GenesisID, params.GenesisHash,
+		assetIssuance, false, pk, pk, pk, pk, "coin", "testCoin")
+	return err
 }
 
 func getSk() error {
