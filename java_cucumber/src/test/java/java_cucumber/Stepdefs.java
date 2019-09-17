@@ -605,6 +605,34 @@ public class Stepdefs {
         pk = new Address(accounts.get(0));
     }
 
+    @Given("default asset creation transaction with total issuance {int}")
+    public void defaultAssetCreationTxn(Integer amount) throws ApiException, NoSuchAlgorithmException {
+        TransactionParams params = acl.transactionParams();
+        lastRound = params.getLastRound();
+        BigInteger assetTotal = BigInteger.valueOf(amount);
+        String assetUnitName = "coin";
+        String assetName = "testcoin";
+        txn = new Transaction(
+                new Address(accounts.get(0)),
+                params.getFee(),
+                params.getLastRound(),
+                params.getLastRound().add(BigInteger.valueOf(1000)),
+                null,
+                params.getGenesisID(),
+                new Digest(params.getGenesishashb64()),
+                assetTotal,
+                false,
+                assetUnitName,
+                assetName,
+                new Address(accounts.get(0)),
+                new Address(accounts.get(0)),
+                new Address(accounts.get(0)),
+                new Address(accounts.get(0))
+        );
+        txn = Account.transactionWithSuggestedFeePerByte(txn, txn.fee);
+        pk = new Address(accounts.get(0));
+    }
+
     @When("I send the transaction")
     public void sendTxn() throws JsonProcessingException, ApiException{
         txid = acl.rawTransaction(Encoder.encodeToMsgPack(stx)).getTxId();
